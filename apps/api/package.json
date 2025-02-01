@@ -2,11 +2,25 @@
   "name": "@repo/api",
   "version": "1.0.0",
   "private": true,
+  "main": "src/server.ts",
+  "scripts": {
+    "dev": "tsx watch src/server.ts"
+  },
   "devDependencies": {
+    "@types/node": "^22.13.0",
     "prisma": "^6.3.0",
     "tsx": "^4.19.2"
   },
   "dependencies": {
-    "@prisma/client": "6.3.0"
+    "@fastify/cookie": "^11.0.2",
+    "@fastify/cors": "^10.0.2",
+    "@fastify/jwt": "^9.0.3",
+    "@fastify/swagger": "^9.4.2",
+    "@fastify/swagger-ui": "^5.2.1",
+    "@prisma/client": "6.3.0",
+    "dotenv": "^16.4.7",
+    "fastify": "^5.2.1",
+    "fastify-type-provider-zod": "^4.0.2",
+    "zod": "^3.24.1"
   }
 }
