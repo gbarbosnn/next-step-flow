@@ -12,6 +12,7 @@ import {
 } from 'fastify-type-provider-zod'
 
 import { env } from './env'
+import { createAccount } from './routes/users/create-account'
 
 const server = fastify().withTypeProvider<ZodTypeProvider>()
 
@@ -54,6 +55,9 @@ server.register(fCookies)
 server.register(fastifyJwt, {
   secret: env.JWT_SECRET,
 })
+
+//routes
+server.register(createAccount)
 
 const start = async () => {
   try {
