@@ -13,6 +13,8 @@ import {
 
 import { env } from './env'
 import { createAccount } from './routes/users/create-account'
+import { sendLink } from './routes/auth/magic-link/send-link'
+import { authenticate } from './routes/auth/magic-link/auth'
 
 const server = fastify().withTypeProvider<ZodTypeProvider>()
 
@@ -56,8 +58,14 @@ server.register(fastifyJwt, {
   secret: env.JWT_SECRET,
 })
 
-//routes
+//# routes
+
+//## auth
 server.register(createAccount)
+
+//### Magic Link
+server.register(sendLink)
+server.register(authenticate)
 
 const start = async () => {
   try {
