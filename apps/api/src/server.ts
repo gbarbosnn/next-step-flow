@@ -72,8 +72,8 @@ server.register(authenticate)
 const start = async () => {
   try {
     await server.listen({
-      port: env.PORT,
-      host: '0.0.0.0',
+      port: env.PORT | 3333,
+      host: '::',
     })
 
     console.log('HTTP SERVER RUNNING🔥')

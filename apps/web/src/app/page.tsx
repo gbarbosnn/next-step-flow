@@ -1,6 +1,10 @@
-import { auth } from '@/auth/auth'
+import { Header } from '@/components/header'
 
 export default async function Home() {
-  const { name } = await auth()
-  return <h1>Hello {name}</h1>
+  return (
+    <div className="space-y-4 py-4">
+      <Header />
+      <main className="mx-auto w-full max-w-[1200px] space-y-4"></main>
+    </div>
+  )
 }
