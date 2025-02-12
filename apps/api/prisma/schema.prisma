@@ -14,7 +14,8 @@ model User {
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
-  tokens Token[]
+  tokens    Token[]
+  proposals Proposal[]
 
   @@map("users")
 }
@@ -32,4 +33,26 @@ model Token {
   user   User   @relation(fields: [userId], references: [id])
 
   @@map("tokens")
+}
+
+enum Status {
+  REVIEW
+  APPROVED
+  REJECTED
+  STANDBY
+}
+
+model Proposal {
+  id          String @id @default(cuid())
+  title       String @db.VarChar(70)
+  description String
+  status      Status
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  userId String @map("user_id")
+  user   User   @relation(fields: [userId], references: [id])
+
+  @@map("proposals")
 }
