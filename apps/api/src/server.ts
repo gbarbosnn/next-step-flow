@@ -16,6 +16,7 @@ import { createAccount } from './routes/users/create-account'
 import { sendLink } from './routes/auth/magic-link/send-link'
 import { authenticate } from './routes/auth/magic-link/auth'
 import { getProfile } from './routes/users/get-profile'
+import { createProposal } from './routes/proposal/create-proposal'
 
 const server = fastify().withTypeProvider<ZodTypeProvider>()
 
@@ -26,6 +27,7 @@ server.register(fastifyCors, {
   origin: '*',
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true,
 })
 
 server.register(fastifySwagger, {
@@ -65,9 +67,12 @@ server.register(fastifyJwt, {
 server.register(createAccount)
 server.register(getProfile)
 
-//### Magic Link
+//### magic Link
 server.register(sendLink)
 server.register(authenticate)
+
+//## proposal
+server.register(createProposal)
 
 const start = async () => {
   try {

@@ -8,8 +8,12 @@ export const auth = fastifyPlugin(async (app: FastifyInstance) => {
         const { sub } = await request.jwtVerify<{ sub: string }>()
 
         return sub
-      } catch {
-        throw new Error('Unauthorized')
+      } catch (error) {
+        if (error instanceof Error) {
+          throw new Error(`Authentication error: ${error.message}`)
+        } else {
+          throw new Error('Authentication error')
+        }
       }
     }
   })
