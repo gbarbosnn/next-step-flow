@@ -17,6 +17,7 @@ import { sendLink } from './routes/auth/magic-link/send-link'
 import { authenticate } from './routes/auth/magic-link/auth'
 import { getProfile } from './routes/users/get-profile'
 import { createProposal } from './routes/proposal/create-proposal'
+import { updateProposal } from './routes/proposal/update-proposal'
 
 const server = fastify().withTypeProvider<ZodTypeProvider>()
 
@@ -73,6 +74,7 @@ server.register(authenticate)
 
 //## proposal
 server.register(createProposal)
+server.register(updateProposal)
 
 const start = async () => {
   try {
