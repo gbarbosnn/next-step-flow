@@ -43,10 +43,11 @@ enum Status {
 }
 
 model Proposal {
-  id          String @id @default(cuid())
-  title       String @db.VarChar(70)
+  id          String  @id @default(cuid())
+  title       String  @db.VarChar(70)
   description String
   status      Status
+  hidden      Boolean @default(false)
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
