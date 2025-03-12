@@ -5,34 +5,27 @@ import { auth } from '../_middlewares/auth'
 import { prisma } from 'lib/prisma'
 import { defineAbilityFor, proposalSchema, userSchema } from '@repo/permissions'
 
-const bodySchema = z.object({
-  title: z.string().max(70),
-  description: z.string(),
-})
-
 const paramsSchema = z.object({
-  id: z.string().cuid(),
+  page: z.number(),
 })
 
-export async function updateProposal(server: FastifyInstance) {
+export async function getAllProposals(server: FastifyInstance) {
   server
     .withTypeProvider<ZodTypeProvider>()
     .register(auth)
-    .put(
-      '/proposals/:id',
+    .get(
+      '/proposals',
       {
         schema: {
           tags: ['Proposal'],
           security: [{ bearerAuth: [] }],
           summary: '',
-          body: bodySchema,
           params: paramsSchema,
         },
       },
       async (request, reply) => {
         const userId = await request.getCurrentUserId()
-        const { title, description } = request.body
-        const { id } = request.params
+        const { page } = request.params
 
         const user = await prisma.user.findUnique({
           where: {
@@ -46,45 +39,27 @@ export async function updateProposal(server: FastifyInstance) {
           })
         }
 
-        const inReview = await prisma.proposal.findFirst({
-          where: {
-            id,
-            userId,
-            status: 'REVIEW',
-          },
-        })
-
-        if (!inReview) {
-          return reply.status(400).send({
-            message:
-              'You cannot update proposals that have already been reviewed',
-          })
-        }
-
         const userParsed = userSchema.parse(user)
-        const proposalParsed = proposalSchema.parse(inReview)
 
         const permisssion = defineAbilityFor(userParsed)
-        const userCanUpdateProposal = permisssion.can('update', proposalParsed)
+        const userCanGetProposals = permisssion.can('get', 'Proposal')
 
-        if (!userCanUpdateProposal) {
+        if (!userCanGetProposals) {
           return reply.status(401).send({
             message: 'Unauthorized',
           })
         }
 
-        await prisma.proposal.update({
-          data: {
-            title,
-            description,
-          },
-          where: {
-            id,
-            userId,
-          },
+        const isAdmin = user.role === 'ADMIN'
+        const searchCondition = isAdmin ? { userId } : {}
+
+        const proposals = await prisma.proposal.findMany({
+          skip: page,
+          take: 10,
+          where: searchCondition,
         })
 
-        return reply.status(200).send()
+        return reply.status(200).send({ proposals: proposals })
       },
     )
 }

@@ -1,3 +1,4 @@
+import { roleSchema } from '@repo/permissions'
 import { FastifyInstance } from 'fastify'
 import type { ZodTypeProvider } from 'fastify-type-provider-zod'
 import { prisma } from 'lib/prisma'
@@ -6,6 +7,7 @@ import z from 'zod'
 const bodySchema = z.object({
   name: z.string(),
   email: z.string().email(),
+  role: roleSchema,
 })
 
 export async function createAccount(server: FastifyInstance) {
@@ -19,7 +21,7 @@ export async function createAccount(server: FastifyInstance) {
       },
     },
     async (request, reply) => {
-      const { name, email } = request.body
+      const { name, email, role } = request.body
 
       const userWithSameEmail = await prisma.user.findUnique({
         where: {
@@ -37,6 +39,7 @@ export async function createAccount(server: FastifyInstance) {
         data: {
           name,
           email,
+          role,
         },
       })
 

@@ -18,6 +18,9 @@ import { authenticate } from './routes/auth/magic-link/auth'
 import { getProfile } from './routes/users/get-profile'
 import { createProposal } from './routes/proposal/create-proposal'
 import { updateProposal } from './routes/proposal/update-proposal'
+import { deleteProposal } from './routes/proposal/delete-proposal'
+import { getAllProposals } from './routes/proposal/get-all-proposals'
+import { getProposal } from './routes/proposal/get-proposal'
 
 const server = fastify().withTypeProvider<ZodTypeProvider>()
 
@@ -75,6 +78,9 @@ server.register(authenticate)
 //## proposal
 server.register(createProposal)
 server.register(updateProposal)
+server.register(deleteProposal)
+server.register(getProposal)
+server.register(getAllProposals)
 
 const start = async () => {
   try {
